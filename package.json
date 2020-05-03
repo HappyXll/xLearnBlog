@@ -5,8 +5,7 @@
   "main": "a.js",
   "scripts": {
     "start": "webpack-dev-server --open --mode development",
-    "build":"webpack --mode production"
-
+    "build": "webpack --mode production"
   },
   "repository": {
     "type": "git",
