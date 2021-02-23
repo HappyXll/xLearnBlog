@@ -1,0 +1,22 @@
+/* .blog_box{
+ border:1px solid red;
+} */
+.Blog-wrap{
+  background: #675858b8;
+}
+.blog_box{
+  width: 750px;
+ margin: auto;
+  margin-top: 100px;
+}
+.top-box{
+  display: flex;
+  flex-direction: row-reverse;
+}
+.box-contents{
+  width: 750px;
+  margin: auto;
+  height: 600px;
+  background: #e9ebef7a;
+  margin-top: -13px;
+}

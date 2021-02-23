@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import routers from './Routes';
 import {
   BrowserRouter ,
@@ -8,10 +8,10 @@ import {
 } from "react-router-dom";
 
 function App(props) {
-  console.log("111");
+  
   return (
     <div>
-      this.is App
+     
       
   <BrowserRouter>
           {routers.map((route,i)=> 

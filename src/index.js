@@ -1,5 +1,5 @@
 import App from "./App";
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom';
 
 
@@ -11,7 +11,7 @@ function index(props) {
   console.log("index");
   return (
     <div>
-      this is hhhh
+      {/* this is hhhh */}
      < App/>
     </div>
   );

@@ -5,6 +5,11 @@
     "module": "es6",
     "target": "es5",
     "jsx": "react",
-    "allowJs": true
-  }
+    "allowJs": true　,
+    "noImplicitThis": false,
+    "allowSyntheticDefaultImports":true,
+    "moduleResolution": "node"
+  },
+  "exclude": ["node_modules", "babel.config.js", "metro.config.js", "jest.config.js"]
+
 }
