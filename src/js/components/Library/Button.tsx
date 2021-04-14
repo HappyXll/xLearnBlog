@@ -1,18 +1,17 @@
 import * as React from "react";
 import "./button.css";
-// import * as cx from 'classnames';
+ 
 
-type ButtonProps ={
-  fill:Boolean;
+  type ButtonProps ={
+  theme:string
   children: React.ReactNode;
 }
 
-const Button =({fill,children}:ButtonProps)  => {
-  let classNames: any;
+const Button =(props:ButtonProps)  => {
+  const {children,theme,...rest}=props;
   return (
-    <div>
-      <a className="button">{children}</a>
-    </div>
+      <button className={`btn btn-${theme}` } {...rest}>{children}</button>
+    
   );
 };
 export default Button;

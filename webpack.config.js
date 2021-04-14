@@ -1,4 +1,5 @@
 const path = require("path");
+
 var HtmlWebpackPlugin = require("html-webpack-plugin");
 let BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
@@ -25,7 +26,7 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
+        use: ["style-loader", "css-loader","postcss-loader"],
       },
       {
         test: /\.(jpe?g|png|gif)$/,
@@ -59,8 +60,12 @@ module.exports = {
     historyApiFallback: true,
   },
   resolve: {
-    // extensions:是为了解决引入时不用写后缀名的
-    extensions: [".tsx", ".ts", ".js"],
+  
+    alias: {
+      api: path.join(__dirname, '/Api.js'),
+    },
+      // extensions:是为了解决引入时不用写后缀名的
+      extensions: [".tsx", ".ts", ".js"],
   },
 
   optimization: {
