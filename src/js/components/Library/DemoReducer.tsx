@@ -1,7 +1,7 @@
 import * as React from 'react';
 function DemoReducer (){
  const initialState = {count :0};
- type ActionTypes = | {type :"inCrement";payload :number}
+ type ActionTypes = {type :"inCrement";payload :number}
  |{type :"decrement";payload:string};
  function reducer(state :typeof initialState,action :ActionTypes){
     switch(action.type){
@@ -24,3 +24,18 @@ function DemoReducer (){
   
 }
 export default DemoReducer;
+interface Foo {
+  foo: number;
+  common: string;
+}
+
+interface Bar {
+  bar: number;
+  common: string;
+}
+function isFoo(arg:Foo|Bar){
+return (arg as Foo).foo!=undefined
+}
+if(isFoo({foo:3,common:"uuu"})){
+  console.log("8888")
+}

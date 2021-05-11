@@ -19,7 +19,7 @@ export default function Login() {
   
   const classes = useStyles();
   const [loginInfo,setLoginInfo]=useState();
-  const [index,setIndex]=useState(0);
+  const [index,setIndex]=useState(1);
   const [value, setValue] = React.useState(1);
   
   const handleChange = (event, newValue) => {
@@ -69,14 +69,7 @@ export default function Login() {
         />
       </div>
       <div className=" mt-3">
-      <TextField
-          id="outlined-basic"
-          label="email"
-          variant="outlined"
-          onChange={typeUserName}
-     
-          style={{width:"100%"}}
-        />
+      
       </div>
       <div>
         <Button
@@ -103,6 +96,15 @@ export default function Login() {
           style={{width:"100%"}}
         />
       </div>
+      <div className=" mt-3">
+      <TextField
+          id="outlined-basic"
+          label="email"
+          variant="outlined"
+          onChange={typeUserName}
+          style={{width:"100%"}}
+        />
+      </div>
       <div>
         <TextField
           id="outlined-password-input"
@@ -114,15 +116,7 @@ export default function Login() {
           style={{width:"100%"}}
         />
       </div>
-      <div className=" mt-3">
-      <TextField
-          id="outlined-basic"
-          label="email"
-          variant="outlined"
-          onChange={typeUserName}
-          style={{width:"100%"}}
-        />
-      </div>
+      
       <div>
         <Button
           variant="contained"
