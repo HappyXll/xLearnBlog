@@ -2,17 +2,14 @@ import React from "react";
 import Liabrary from "./js/components/Library/Library";
 import Loadable from "react-loadable";
 import Loading from "../src/js/components/Loading";
-import Login from './Login';
+import Login from './js/components/Login/Login';
 
-const Blog = Loadable({
-  loader: () => import("./js/components/Blogs/Blog"),
+const HomePage = Loadable({
+  loader: () => import("./js/components/HomePage/HomePage"),
   loading: Loading,
 });
 
-// const Login = Loadable({
-//   loader: () => import("./js/components/Login/Login"),
-//   loading: Loading,
-// });
+
 let routers = [
   {
     path:"/login",
@@ -20,8 +17,8 @@ let routers = [
   },
   //
   {
-    path: "/Blog",
-    componentName: Blog,
+    path: "/homePage",
+    componentName: HomePage,
     
   },
   {
@@ -30,7 +27,7 @@ let routers = [
   },
   {
    
-    componentName: Liabrary,
+    componentName: HomePage,
   },
    
    
