@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 
 function Blog(props) {
-  console.log("props", props);
+  console.log("propsBlog", props);
   return (
     <div className="Blog-wrap">
       <div className="blog_box">

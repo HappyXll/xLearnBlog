@@ -15,17 +15,24 @@ const Blog = Loadable({
 // });
 let routers = [
   {
+    path:"/login",
+    componentName:Login,
+  },
+  //
+  {
     path: "/Blog",
     componentName: Blog,
+    
   },
   {
     path: "/Liabrary",
     componentName: Liabrary,
   },
   {
-    path:"/login",
-    componentName:Login,
+   
+    componentName: Liabrary,
   },
-  {componentName:Login}
+   
+   
 ];
 export default routers;

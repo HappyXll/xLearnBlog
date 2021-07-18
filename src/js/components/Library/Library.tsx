@@ -3,7 +3,7 @@ import Button from './Button';
 import ButtonGroup from './ButtonGroup';
 import Demo from './Demo';
 import DemoReducer from './DemoReducer';
-
+import UserInfo from '../../../User';
 const Liabrary = () => (
   <>
   <p className='flex'>2222</p>
@@ -21,7 +21,9 @@ const Liabrary = () => (
   </ButtonGroup>
   <Demo/>
   <DemoReducer/>
+  <UserInfo/>
   </>
+  
 );
 
 export default Liabrary;

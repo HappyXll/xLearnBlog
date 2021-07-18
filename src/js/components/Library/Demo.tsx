@@ -9,7 +9,7 @@ type GreetingProps = {
 const Demo1: React.FC<GreetingProps> = ({ name = "liili" }) => {
   let someValue: any = "this is a string";
   let strLength: number = (someValue as string).length;
-  return <h2>hello,{name},and </h2>;
+  return <h2>hello and </h2>;
 };
 
 
