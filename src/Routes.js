@@ -22,7 +22,7 @@ let routers = [
     
   },
   {
-    path: "/Liabrary",
+    path: "/liabrary",
     componentName: Liabrary,
   },
   {
