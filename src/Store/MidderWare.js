@@ -6,7 +6,6 @@ const  logger = ({getState})=>(next)=>(action)=>{
     const returnValue =next(action);
     const nextState =getState()
     console.log("next State",nextState);
-
 }
 
 

@@ -8,7 +8,7 @@ const authReducer = (state, action) => {
     case "GetUserSuccess":
      return {
         
-        islogin: true,
+      isLogin: true,
         userInfo: action.data,
       };
     default:

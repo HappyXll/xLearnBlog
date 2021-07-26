@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
-import api from "api";
+//import api from "api";
 import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import { connect } from "react-redux";
+import loginAction from '../../../Store/Action';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,8 +16,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-export default function Login() {
+ function Login(props) {
   const classes = useStyles();
+  const {loginAction}=props;
   const [loginInfo, setLoginInfo] = useState();
   const [index, setIndex] = useState(0);
 
@@ -24,15 +27,15 @@ export default function Login() {
     setIndex(newValue);
   };
   useEffect(() => {
-    api
-      .post("/login", {
-        name: "BiaoChenXuYing",
-        password: "888888",
-        email: "admin@qq.com",
-      })
-      .then((response) => {
-        console.log("ressss", response.data.data);
-      });
+    // api
+    //   .post("/login", {
+    //     name: "BiaoChenXuYing",
+    //     password: "888888",
+    //     email: "admin@qq.com",
+    //   })
+    //   .then((response) => {
+    //     console.log("ressss", response.data.data);
+    //   });
   }, []);
   const typeUserName = (username) => {
     console.log(username.target.value);
@@ -42,7 +45,7 @@ export default function Login() {
   };
   const LoginPart = () => {
     return (
-      <div style={{ background: "white" }}>
+      <div >
         <h1 className="font-size p-2">Login </h1>
         <div>
           <TextField
@@ -71,7 +74,7 @@ export default function Login() {
             variant="contained"
             className="mt-6 mb-8"
             onClick={() => {
-              console.log(111);
+              props?.loginAction?.();
             }}
           >
             submit
@@ -129,21 +132,26 @@ export default function Login() {
     );
   };
   return (
-    <>
+    < div style={{ background: "white",width:"750px" ,margin:"auto"}}>
       <Paper>
         <Tabs
           value={index}
-          classes={{ background: "blue" }}
+         
           onChange={handleChange}
           variant="fullWidth"
           selectionFollowsFocus
         >
           <Tab label="Login" />
-          <Tab label="Register" />
+          {/* <Tab label="Register" /> */}
         </Tabs>
       </Paper>
       {index === 0 && <LoginPart />}
-      {index === 1 && <Register />}
-    </>
+      {/* {index === 1 && <Register />} */}
+    </div>
   );
 }
+const mapDispatch = {
+  loginAction
+};;
+
+export default connect(null,mapDispatch)(Login); 

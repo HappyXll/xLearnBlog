@@ -2,14 +2,14 @@ import * as React from "react";
 import routers from "./Routes";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
-import Store from "./Store/Store";
-
+import Store ,{persistor}from "./Store/Store";
+import { PersistGate } from "redux-persist/lib/integration/react";
 
 function App(props) {
   return (
-    <>
-      <div>
-        <Provider store={Store}>
+    
+      <Provider store={Store}>
+        <PersistGate loading={null} persistor={persistor}>
           <BrowserRouter>
             <Switch>
               {routers.map((route, i) => (
@@ -21,9 +21,10 @@ function App(props) {
               ))}
             </Switch>
           </BrowserRouter>
+          </PersistGate >
         </Provider>
-      </div>
-    </>
+ 
+    
   );
 }
 
