@@ -3,7 +3,12 @@ const path = require("path");
 var HtmlWebpackPlugin = require("html-webpack-plugin");
 let BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
-  const  TerserPlugin =require("terser-webpack-plugin") ;
+const TerserPlugin = require("terser-webpack-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+// 打包时会将js文件中引入的css 打包为css文件,而不是将css内容打包到js中
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+// 清理 /dist 文件夹 暂时不能用,只能暂时用于webpack 5
+//const CleanWebpackPlugin = require('clean-webpack-plugin');
 module.exports = {
   // mode: 'production',
   module: {
@@ -13,11 +18,10 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
-          options:{
-            plugins:['@babel/plugin-transform-runtime']
-          }
+          options: {
+            plugins: ["@babel/plugin-transform-runtime"],
+          },
         },
-        
       },
       {
         test: /\.tsx?$/,
@@ -28,11 +32,14 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: ["style-loader", "css-loader","postcss-loader"],
+      
+        use: [ MiniCssExtractPlugin.loader, "css-loader",
+       
+      ],
       },
       {
         test: /\.(jpe?g|png|gif)$/,
-        loader: 'url-loader',
+        loader: "url-loader",
         options: {
           // Inline files smaller than 10 kB (10240 bytes)
           limit: 10 * 1024,
@@ -44,38 +51,39 @@ module.exports = {
     index: "./src/index.js",
   },
   output: {
-    path: path.resolve(__dirname, "new"),
+    path: path.resolve(__dirname, "dist"),
     //输出的文件名称
     filename: "[name]-[chunkhash].js",
-   // chunkFilename: "assets/js/[name]-[chunkhash].js",
- 
+    // chunkFilename: "assets/js/[name]-[chunkhash].js",
+    // clean: true,
   },
   plugins: [
-    
+    new MiniCssExtractPlugin({filename: "[name].css", chunkFilename: "[id].css", ignoreOrder: true,}),
     new HtmlWebpackPlugin({
       template: "./src/index.html",
       filename: "./index.html",
     }),
-   
+    
 
-   
-    // new BundleAnalyzerPlugin(),
+    new BundleAnalyzerPlugin(),
   ],
   devServer: {
     port: 2000,
     historyApiFallback: true,
   },
   resolve: {
-  
     alias: {
-      api: path.join(__dirname, '/Api.js'),
+      api: path.join(__dirname, "/Api.js"),
     },
-      // extensions:是为了解决引入时不用写后缀名的
-      extensions: [".tsx", ".ts", ".js"],
+    // extensions:是为了解决引入时不用写后缀名的
+    extensions: [".tsx", ".ts", ".js"],
   },
 
   optimization: {
-    minimize: false,
+    minimize: true,
+   
+     // minimizer: [new UglifyJsPlugin()],
+  
     // minimizer:[new TerserPlugin({
     //   minify: (file, sourceMap) => {
     //     // https://github.com/mishoo/UglifyJS2#minify-options
@@ -95,8 +103,16 @@ module.exports = {
 
     // ]
     splitChunks: {
-      chunks: 'all',
-    }
+      chunks: "all",
+      minSize:20000,
+      cacheGroups: {
+        materialui: {
+          test: /[\\/]node_modules[\\/](@material-ui)[\\/]/,
+          name: 'materialui',
+          chunks: 'all',
+        },
+      },
+    },
   },
   devtool: "cheap-module-source-map",
 };
