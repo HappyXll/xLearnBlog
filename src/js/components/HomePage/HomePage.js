@@ -5,7 +5,7 @@ import Login from "../Login/Login";
 import Modal from "@material-ui/core/Modal";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
-
+import imgOO from './111.jpg';
 
 function HomePage(props) {
   console.log(1111,props)
@@ -53,6 +53,7 @@ function HomePage(props) {
         >
           Login
         </Button>:<div>LoginSuccess:{props?.authname}</div>}
+        <img src={imgOO}/>
       </section>
     </div>
   );

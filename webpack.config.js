@@ -4,11 +4,27 @@ var HtmlWebpackPlugin = require("html-webpack-plugin");
 let BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
 const TerserPlugin = require("terser-webpack-plugin");
+
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 // 打包时会将js文件中引入的css 打包为css文件,而不是将css内容打包到js中
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 // 清理 /dist 文件夹 暂时不能用,只能暂时用于webpack 5
 //const CleanWebpackPlugin = require('clean-webpack-plugin');
+const envPlugins =(env)=>{
+  
+  console.log("env",env);
+  const plugins =[new MiniCssExtractPlugin({filename: "[name].css", chunkFilename: "[id].css", ignoreOrder: true,}),
+  new HtmlWebpackPlugin({
+    template: "./src/index.html",
+    filename: "./index.html",
+  })];
+if(env!=='production'){
+  console.log("1");
+  plugins.push(new BundleAnalyzerPlugin);
+}
+return plugins
+} 
+
 module.exports = {
   // mode: 'production',
   module: {
@@ -33,16 +49,24 @@ module.exports = {
       {
         test: /\.css$/i,
       
-        use: [ MiniCssExtractPlugin.loader, "css-loader",
+        use: [ MiniCssExtractPlugin.loader, "css-loader", 
        
       ],
       },
       {
-        test: /\.(jpe?g|png|gif)$/,
-        loader: "url-loader",
+        test:  /\.(png|jpe?g|gif)$/i,
+        loader:'file-loader',
         options: {
-          // Inline files smaller than 10 kB (10240 bytes)
-          limit: 10 * 1024,
+          name(resourcePath, resourceQuery) {
+            // `resourcePath` - `/absolute/path/to/file.js`
+            // `resourceQuery` - `?foo=bar`
+
+            if (process.env.NODE_ENV === 'development') {
+              return '[path][name].[ext]';
+            }
+
+            return 'img/[contenthash].[ext]';
+          },
         },
       },
     ],
@@ -57,16 +81,7 @@ module.exports = {
     // chunkFilename: "assets/js/[name]-[chunkhash].js",
     // clean: true,
   },
-  plugins: [
-    new MiniCssExtractPlugin({filename: "[name].css", chunkFilename: "[id].css", ignoreOrder: true,}),
-    new HtmlWebpackPlugin({
-      template: "./src/index.html",
-      filename: "./index.html",
-    }),
-    
-
-    new BundleAnalyzerPlugin(),
-  ],
+  plugins: envPlugins(process.env.NODE_ENV),
   devServer: {
     port: 2000,
     historyApiFallback: true,
