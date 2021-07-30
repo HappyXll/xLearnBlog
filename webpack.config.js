@@ -13,7 +13,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const envPlugins =(env)=>{
   
   console.log("env",env);
-  const plugins =[new MiniCssExtractPlugin({filename: "[name].css", chunkFilename: "[id].css", ignoreOrder: true,}),
+  const plugins =[new MiniCssExtractPlugin({filename: 'css/[name].css'}),
   new HtmlWebpackPlugin({
     template: "./src/index.html",
     filename: "./index.html",
@@ -49,8 +49,9 @@ module.exports = {
       {
         test: /\.css$/i,
       
-        use: [ MiniCssExtractPlugin.loader, "css-loader", 
-       
+        use: [MiniCssExtractPlugin.loader,  "css-loader", 
+        
+         
       ],
       },
       {
@@ -129,5 +130,10 @@ module.exports = {
       },
     },
   },
-  devtool: "cheap-module-source-map",
+  devtool: "inline-source-map",
+  devServer: {
+    contentBase: path.join(__dirname, 'dist'),
+    compress: true,
+    port: 9000
+  }
 };
