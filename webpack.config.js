@@ -1,23 +1,38 @@
 const path = require("path");
-
+const glob = require('glob');
+const PATHS = {
+  path: path.join(__dirname,'src/tailwind.css')
+}
+console.log("PATHS",PATHS);
 var HtmlWebpackPlugin = require("html-webpack-plugin");
-let BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
-  .BundleAnalyzerPlugin;
-const TerserPlugin = require("terser-webpack-plugin");
-
+let BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+//const TerserPlugin = require("terser-webpack-plugin");
+var OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 // 打包时会将js文件中引入的css 打包为css文件,而不是将css内容打包到js中
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-// 清理 /dist 文件夹 暂时不能用,只能暂时用于webpack 5
-//const CleanWebpackPlugin = require('clean-webpack-plugin');
+// 清理 /dist 文件夹 暂时不能用
+const { CleanWebpackPlugin } = require('clean-webpack-plugin'); // installed via npm
+
+// 清除不用的css
+const PurgeCSSPlugin = require('purgecss-webpack-plugin')
 const envPlugins =(env)=>{
   
   console.log("env",env);
-  const plugins =[new MiniCssExtractPlugin({filename: 'css/[name].css'}),
+  const plugins =[new MiniCssExtractPlugin({filename:'css/[contenthash].css',
+
+  // chunkFilename:  'css/[contenthash].css'
+}),
   new HtmlWebpackPlugin({
     template: "./src/index.html",
     filename: "./index.html",
-  })];
+  }),
+  new CleanWebpackPlugin(),
+  // new PurgeCSSPlugin({
+  //   paths: glob.sync(`${PATHS.path}`, { nodir: true })
+  // })
+];
+  console.log("ppp",plugins);
 if(env!=='production'){
   console.log("1");
   plugins.push(new BundleAnalyzerPlugin);
@@ -47,12 +62,11 @@ module.exports = {
         },
       },
       {
-        test: /\.css$/i,
-      
+        test: /\.css$/,
+        
         use: [MiniCssExtractPlugin.loader,  "css-loader", 
         
-         
-      ],
+      ]
       },
       {
         test:  /\.(png|jpe?g|gif)$/i,
@@ -94,11 +108,18 @@ module.exports = {
     // extensions:是为了解决引入时不用写后缀名的
     extensions: [".tsx", ".ts", ".js"],
   },
-
+  performance: {
+    maxAssetSize: 100000
+  },
+  
   optimization: {
     minimize: true,
    
-     // minimizer: [new UglifyJsPlugin()],
+      minimizer: [new UglifyJsPlugin(), new OptimizeCSSAssetsPlugin({
+        cssProcessorPluginOptions: {
+          preset: ['default', { discardComments: { removeAll: true } }],
+        }
+      })],
   
     // minimizer:[new TerserPlugin({
     //   minify: (file, sourceMap) => {
@@ -119,21 +140,22 @@ module.exports = {
 
     // ]
     splitChunks: {
-      chunks: "all",
+      chunks: "async",
       minSize:20000,
       cacheGroups: {
         materialui: {
           test: /[\\/]node_modules[\\/](@material-ui)[\\/]/,
           name: 'materialui',
-          chunks: 'all',
+          chunks: 'initial',
         },
       },
     },
   },
-  devtool: "inline-source-map",
+  // devtool: "source-map",
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
     port: 9000
-  }
+  },
+  
 };

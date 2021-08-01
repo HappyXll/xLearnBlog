@@ -17,7 +17,7 @@ function HomePage(props) {
   return (
     <div className="Blog-wrap">
       <div className="blog_box">
-        <div className="hm-navbar ">HomePage</div>
+        <div className="hm-navbar m-1">HomePage</div>
         <section className="header-links">
           <div>
             <Link to="homePage">HomePage</Link>
