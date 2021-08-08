@@ -1,10 +1,13 @@
 import App from "./App";
 import * as React from "react";
 import ReactDOM from "react-dom";
-import '../src/tailwind.css';
+import '../src/Tw/tailwind.css';
 const wrapper = (Component) => {
-  const root = document.getElementById("container");
-  return ReactDOM.render(<Component />, root);
+  if (typeof window !== 'undefined') {
+    const root = document.getElementById("container");
+    ReactDOM.render(<Component />, root)
+}
+ 
 };
 function index(props) {
   console.log("index");

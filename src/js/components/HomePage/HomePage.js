@@ -14,6 +14,8 @@ function HomePage(props) {
   const handleClose = () => {
     setOpen(false);
   };
+  
+
   return (
     <div className="Blog-wrap">
       <div className="blog_box">

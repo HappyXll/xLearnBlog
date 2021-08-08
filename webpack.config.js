@@ -1,47 +1,78 @@
 const path = require("path");
-const glob = require('glob');
-const PATHS = {
-  path: path.join(__dirname,'src/tailwind.css')
-}
-console.log("PATHS",PATHS);
-var HtmlWebpackPlugin = require("html-webpack-plugin");
-let BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-//const TerserPlugin = require("terser-webpack-plugin");
-var OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const glob = require("glob");
+const purgecssFromHtml = require("purgecss-from-html");
+const ESLintPlugin = require('eslint-webpack-plugin');
+// const PATHS = {
+//   path: path.join(__dirname, "src/Tw"),
+// };
+
+let HtmlWebpackPlugin = require("html-webpack-plugin");
+let BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+  .BundleAnalyzerPlugin;
+// const TerserPlugin = require("terser-webpack-plugin");
+let  OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 // 打包时会将js文件中引入的css 打包为css文件,而不是将css内容打包到js中
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-// 清理 /dist 文件夹 暂时不能用
-const { CleanWebpackPlugin } = require('clean-webpack-plugin'); // installed via npm
+// 清理 /dist 文件夹
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+// 用于公共库的打包
+const HtmlWebpackExternalsPlugin = require("html-webpack-externals-plugin");
 
 // 清除不用的css
-const PurgeCSSPlugin = require('purgecss-webpack-plugin')
-const envPlugins =(env)=>{
-  
-  console.log("env",env);
-  const plugins =[new MiniCssExtractPlugin({filename:'css/[contenthash].css',
+const PurgeCSSPlugin = require("purgecss-webpack-plugin");
+const envPlugins = (env) => {
+  // eslint-disable-next-line no-console
+ 
+  const plugins = [
+    new MiniCssExtractPlugin({
+      filename: "css/[contenthash].css",
 
-  // chunkFilename:  'css/[contenthash].css'
-}),
-  new HtmlWebpackPlugin({
-    template: "./src/index.html",
-    filename: "./index.html",
-  }),
-  new CleanWebpackPlugin(),
-  // new PurgeCSSPlugin({
-  //   paths: glob.sync(`${PATHS.path}`, { nodir: true })
-  // })
-];
-  console.log("ppp",plugins);
-if(env!=='production'){
-  console.log("1");
-  plugins.push(new BundleAnalyzerPlugin);
-}
-return plugins
-} 
+      // chunkFilename:  'css/[contenthash].css'
+    }),
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+      filename: "./index.html",
+    }),
+    new PurgeCSSPlugin({
+      paths: glob.sync(`${path.join(__dirname, "src")}/**/*`, { nodir: true }),
+      extractors: [
+        {
+          extractor: purgecssFromHtml,
+          extensions: ["html"],
+        },
+      ],
+      css: [],
+    }),
+    new HtmlWebpackExternalsPlugin({
+      externals: [
+        {
+          module: 'react',
+          entry: 'https://unpkg.com/react@17/umd/react.production.min.js',
+          global: 'React',
+        },
+        {
+          module: 'react-dom',
+          entry: 'https://unpkg.com/react-dom@17/umd/react-dom.production.min.js',
+          global: 'ReactDOM',
+        }
+      ],
+    } ),
+    new ESLintPlugin()
+  ];
+
+  if (env !== "production") {
+    plugins.push(new BundleAnalyzerPlugin());
+  }
+  if(env==='production'){
+    plugins.push(new CleanWebpackPlugin())
+  }
+  console.log("ppp", plugins);
+  return plugins;
+};
 
 module.exports = {
-  // mode: 'production',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -63,24 +94,22 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        
-        use: [MiniCssExtractPlugin.loader,  "css-loader", 
-        
-      ]
+
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
       {
-        test:  /\.(png|jpe?g|gif)$/i,
-        loader:'file-loader',
+        test: /\.(png|jpe?g|gif)$/i,
+        loader: "file-loader",
         options: {
           name(resourcePath, resourceQuery) {
             // `resourcePath` - `/absolute/path/to/file.js`
             // `resourceQuery` - `?foo=bar`
 
-            if (process.env.NODE_ENV === 'development') {
-              return '[path][name].[ext]';
+            if (process.env.NODE_ENV === "development") {
+              return "[path][name].[ext]";
             }
 
-            return 'img/[contenthash].[ext]';
+            return "img/[contenthash].[ext]";
           },
         },
       },
@@ -109,18 +138,21 @@ module.exports = {
     extensions: [".tsx", ".ts", ".js"],
   },
   performance: {
-    maxAssetSize: 100000
+    maxAssetSize: 100000,
   },
-  
+
   optimization: {
     minimize: true,
-   
-      minimizer: [new UglifyJsPlugin(), new OptimizeCSSAssetsPlugin({
+
+    minimizer: process.env.NODE_ENV==='production'?[
+      new UglifyJsPlugin(),
+      new OptimizeCSSAssetsPlugin({
         cssProcessorPluginOptions: {
-          preset: ['default', { discardComments: { removeAll: true } }],
-        }
-      })],
-  
+          preset: ["default", { discardComments: { removeAll: true } }],
+        },
+      }),
+    ]:[],
+
     // minimizer:[new TerserPlugin({
     //   minify: (file, sourceMap) => {
     //     // https://github.com/mishoo/UglifyJS2#minify-options
@@ -141,21 +173,20 @@ module.exports = {
     // ]
     splitChunks: {
       chunks: "async",
-      minSize:20000,
+      minSize: 20000,
       cacheGroups: {
         materialui: {
           test: /[\\/]node_modules[\\/](@material-ui)[\\/]/,
-          name: 'materialui',
-          chunks: 'initial',
+          name: "materialui",
+          chunks: "initial",
         },
       },
     },
   },
-  // devtool: "source-map",
-  devServer: {
-    contentBase: path.join(__dirname, 'dist'),
-    compress: true,
-    port: 9000
-  },
-  
+  devtool: "source-map",
+  // devServer: {
+  //   contentBase: path.join(__dirname, "dist"),
+  //   compress: true,
+  //   port: 9000,
+  // },
 };

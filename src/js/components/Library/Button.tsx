@@ -10,7 +10,7 @@ import "./button.css";
 const Button =(props:ButtonProps)  => {
   const {children,theme,...rest}=props;
   return (
-      <button className={`btn btn-${theme}` } {...rest}>{children}</button>
+      <button className={`lx-btn lx-btn-${theme} a` } {...rest}>{children}</button>
     
   );
 };

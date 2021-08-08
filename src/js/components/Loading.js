@@ -1,10 +1,11 @@
 import * as React from 'react';
 
-function Loading(props) {
+function Loading() {
   console.log("fff");
   return (
     <div>
       Loging....
+     
     </div>
   );
 }

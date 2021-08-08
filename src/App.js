@@ -17,6 +17,7 @@ function App(props) {
                   path={route.path}
                   component={route.componentName}
                   key={`${route.path} ${i} `}
+                  {...props}
                 />
               ))}
             </Switch>
