@@ -1,7 +1,7 @@
 const path = require("path");
 const glob = require("glob");
 const purgecssFromHtml = require("purgecss-from-html");
-const ESLintPlugin = require('eslint-webpack-plugin');
+const ESLintPlugin = require("eslint-webpack-plugin");
 // const PATHS = {
 //   path: path.join(__dirname, "src/Tw"),
 // };
@@ -10,7 +10,7 @@ let HtmlWebpackPlugin = require("html-webpack-plugin");
 let BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
   .BundleAnalyzerPlugin;
 // const TerserPlugin = require("terser-webpack-plugin");
-let  OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+let OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 // 打包时会将js文件中引入的css 打包为css文件,而不是将css内容打包到js中
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -21,9 +21,11 @@ const HtmlWebpackExternalsPlugin = require("html-webpack-externals-plugin");
 
 // 清除不用的css
 const PurgeCSSPlugin = require("purgecss-webpack-plugin");
+
+console.log("h-100", process.env.NODE_ENV, path.join(__dirname, "NEW"));
 const envPlugins = (env) => {
   // eslint-disable-next-line no-console
- 
+
   const plugins = [
     new MiniCssExtractPlugin({
       filename: "css/[contenthash].css",
@@ -44,35 +46,37 @@ const envPlugins = (env) => {
       ],
       css: [],
     }),
-    new HtmlWebpackExternalsPlugin({
-      externals: [
-        {
-          module: 'react',
-          entry: 'https://unpkg.com/react@17/umd/react.production.min.js',
-          global: 'React',
-        },
-        {
-          module: 'react-dom',
-          entry: 'https://unpkg.com/react-dom@17/umd/react-dom.production.min.js',
-          global: 'ReactDOM',
-        }
-      ],
-    } ),
-    new ESLintPlugin()
+    
+    new ESLintPlugin(),
   ];
 
   if (env !== "production") {
     plugins.push(new BundleAnalyzerPlugin());
   }
-  if(env==='production'){
-    plugins.push(new CleanWebpackPlugin())
+  if (env === "production") {
+    plugins.push(new CleanWebpackPlugin(),new HtmlWebpackExternalsPlugin({
+      externals: [
+        {
+          module: "react",
+          entry: "https://unpkg.com/react@17/umd/react.production.min.js",
+          global: "React",
+        },
+        {
+          module: "react-dom",
+          entry:
+            "https://unpkg.com/react-dom@17/umd/react-dom.production.min.js",
+          global: "ReactDOM",
+        },
+      ],
+    }),);
+    
   }
   console.log("ppp", plugins);
   return plugins;
 };
 
 module.exports = {
-  mode: 'production',
+  mode: "development",
   module: {
     rules: [
       {
@@ -119,7 +123,7 @@ module.exports = {
     index: "./src/index.js",
   },
   output: {
-    path: path.resolve(__dirname, "dist"),
+    path: process.env.NODE_ENV==='development'?path.resolve(__dirname, "NEW"):path.resolve(__dirname, "dist"),
     //输出的文件名称
     filename: "[name]-[chunkhash].js",
     // chunkFilename: "assets/js/[name]-[chunkhash].js",
@@ -144,14 +148,17 @@ module.exports = {
   optimization: {
     minimize: true,
 
-    minimizer: process.env.NODE_ENV==='production'?[
-      new UglifyJsPlugin(),
-      new OptimizeCSSAssetsPlugin({
-        cssProcessorPluginOptions: {
-          preset: ["default", { discardComments: { removeAll: true } }],
-        },
-      }),
-    ]:[],
+    minimizer:
+      process.env.NODE_ENV === "production"
+        ? [
+            new UglifyJsPlugin({sourceMap: true}),
+            new OptimizeCSSAssetsPlugin({
+              cssProcessorPluginOptions: {
+                preset: ["default", { discardComments: { removeAll: true } }],
+              },
+            }),
+          ]
+        : [],
 
     // minimizer:[new TerserPlugin({
     //   minify: (file, sourceMap) => {
@@ -189,4 +196,5 @@ module.exports = {
   //   compress: true,
   //   port: 9000,
   // },
+  
 };

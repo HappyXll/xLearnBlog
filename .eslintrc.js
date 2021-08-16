@@ -20,11 +20,9 @@ module.exports = {
       "jsx": true
     }
   },
-  globals: {
-    // 你的全局变量（设置为 false 表示它不允许被重新赋值）
-    //
-    // myGlobal: false
-  },
+  // globals: {
+  //   Array: false
+  // },
   rules: {
     "react/jsx-uses-react": "warn",
     "react/jsx-uses-vars": "warn",
