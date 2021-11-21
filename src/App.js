@@ -6,6 +6,7 @@ import Store ,{persistor}from "./Store/Store";
 import { PersistGate } from "redux-persist/lib/integration/react";
 
 function App(props) {
+  console.log("1111 add test");
   return (
     
       <Provider store={Store}>
